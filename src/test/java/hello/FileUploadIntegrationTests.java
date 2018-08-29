@@ -43,7 +43,7 @@ public class FileUploadIntegrationTests {
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("file", resource);
-		ResponseEntity<String> response = this.restTemplate.postForEntity("/", map,
+		ResponseEntity<String> response = this.restTemplate.postForEntity("/ingest", map,
 				String.class);
 
 		assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.FOUND);

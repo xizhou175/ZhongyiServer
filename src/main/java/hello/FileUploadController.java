@@ -26,29 +26,14 @@ import hello.storage.StorageFileNotFoundException;
 import hello.storage.StorageService;
 import hello.storage.User;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 public class FileUploadController {
 
     private final StorageService storageService;
-    private User user;
 
     @Autowired
     public FileUploadController(StorageService storageService, User user) {
         this.storageService = storageService;
-	this.user = user;
-    }
-
-    @GetMapping("/")
-    public String listUploadedFiles(Model model) throws IOException {
-
-        model.addAttribute("files", storageService.loadAll().map(
-                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                        "serveFile", path.getFileName().toString()).build().toString())
-                .collect(Collectors.toList()));
-
-        return "uploadForm";
     }
 
     @GetMapping("/files/{filename:.+}")
@@ -60,30 +45,16 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    /*@PostMapping("/")
+
+    @PostMapping("/ingest")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes) {
 
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
         return "redirect:/";
-    }*/
-
-    @PostMapping("/")
-    @ResponseBody
-    public String home(@RequestBody String valueOne){
-	try{
-	    System.out.println(valueOne);
-	    ObjectMapper mapper = new ObjectMapper();
-	    user = mapper.readValue(valueOne, User.class);
-	    System.out.println("user info:" + user.toString());
-	}catch(Exception e){
-	    System.out.println(e.getMessage());
-	    e.printStackTrace();
-	}
-    	return "redirect:/";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

@@ -3,7 +3,7 @@ package hello.storage;
 import org.springframework.stereotype.Component;
 
 @Component
-public class User {
+public class BasicAuth {
 
     /**
      * Folder location for storing files
@@ -15,7 +15,7 @@ public class User {
         return username;
     }
 
-    public void setUsrname(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -30,7 +30,6 @@ public class User {
     @Override
     public String toString(){
     	String info = String.format("username = %s, password = %s", username, password);
-	return info;
+	    return info;
     }
-
 }
