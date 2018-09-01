@@ -13,6 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.User;
 import com.example.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 public class LoginController {
@@ -37,7 +41,7 @@ public class LoginController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
 		User userExists = userService.findUserByEmail(user.getEmail());
@@ -53,17 +57,39 @@ public class LoginController {
 			modelAndView.addObject("successMessage", "User has been registered successfully");
 			modelAndView.addObject("user", new User());
 			modelAndView.setViewName("registration");
-			
 		}
 		return modelAndView;
+	}*/
+	
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public ResponseEntity createNewUser(@Valid String value) {
+		ModelAndView modelAndView = new ModelAndView();
+		User user = new User();
+		try{
+		    System.out.println(value);
+		    //ObjectMapper mapper = new ObjectMapper();
+		    //user = mapper.readValue(value, User.class);
+		    //System.out.println("user info:" + user.toString());
+		}catch(Exception e){
+		    System.out.println(e.getMessage());
+		    e.printStackTrace();
+		}
+//		User userExists = userService.findUserByEmail(user.getEmail());
+//		if (userExists != null) {
+//			userService.saveUser(user);
+//			return new ResponseEntity(HttpStatus.OK);
+//		}
+		
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
+	
 	
 	@RequestMapping(value="/admin/home", method = RequestMethod.GET)
 	public ModelAndView home(){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+		modelAndView.addObject("userName", "Welcome " + user.getName() + "(" + user.getEmail() + ")");
 		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/home");
 		return modelAndView;
