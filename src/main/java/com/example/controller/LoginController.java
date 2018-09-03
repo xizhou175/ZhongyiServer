@@ -26,6 +26,7 @@ public class LoginController {
 
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
 	public ModelAndView login(){
+		System.out.println("user login");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login");
 		return modelAndView;
@@ -62,11 +63,11 @@ public class LoginController {
 	}*/
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ResponseEntity createNewUser(@Valid String value) {
+	public ResponseEntity createNewUser(@RequestBody String value) {
 		ModelAndView modelAndView = new ModelAndView();
 		User user = new User();
 		try{
-		    System.out.println(value);
+		    System.out.println("user value " + value);
 		    //ObjectMapper mapper = new ObjectMapper();
 		    //user = mapper.readValue(value, User.class);
 		    //System.out.println("user info:" + user.toString());
