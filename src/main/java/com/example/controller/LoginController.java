@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.User;
 import com.example.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -64,22 +65,25 @@ public class LoginController {
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity createNewUser(@RequestBody String value) {
-		ModelAndView modelAndView = new ModelAndView();
 		User user = new User();
 		try{
-		    System.out.println("user value " + value);
-		    //ObjectMapper mapper = new ObjectMapper();
-		    //user = mapper.readValue(value, User.class);
-		    //System.out.println("user info:" + user.toString());
+		    System.out.println(value);
+		    ObjectMapper mapper = new ObjectMapper();
+		    JsonNode jsonUserNode = mapper.readTree(value);
+		    user.setName(jsonUserNode.get("name").asText());
+		    user.setEmail(jsonUserNode.get("email").asText());
+		    user.setPassword(jsonUserNode.get("password").asText());
+		    user.setAge(jsonUserNode.get("age").asInt());
+		    user.setGender(jsonUserNode.get("gender").asText());
 		}catch(Exception e){
 		    System.out.println(e.getMessage());
 		    e.printStackTrace();
 		}
-//		User userExists = userService.findUserByEmail(user.getEmail());
-//		if (userExists != null) {
-//			userService.saveUser(user);
-//			return new ResponseEntity(HttpStatus.OK);
-//		}
+		User userExists = userService.findUserByEmail(user.getEmail());
+		if (userExists != null) {
+			userService.saveUser(user);
+			return new ResponseEntity(HttpStatus.OK);
+		}
 		
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
