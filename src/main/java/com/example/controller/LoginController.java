@@ -69,8 +69,7 @@ public class LoginController {
 		    System.out.println(value);
 		    ObjectMapper mapper = new ObjectMapper();
 		    JsonNode jsonUserNode = mapper.readTree(value);
-		    user.setName(jsonUserNode.get("name").asText());
-		    user.setEmail(jsonUserNode.get("email").asText());
+		    user.setName(jsonUserNode.get("username").asText());
 		    user.setPassword(jsonUserNode.get("password").asText());
 		    user.setAge(jsonUserNode.get("age").asInt());
 		    user.setGender(jsonUserNode.get("gender").asText());
@@ -93,7 +92,7 @@ public class LoginController {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("userName", "Welcome " + user.getName() + "(" + user.getEmail() + ")");
+		modelAndView.addObject("userName", "Welcome " + user.getName());
 		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/home");
 		return modelAndView;
