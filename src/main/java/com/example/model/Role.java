@@ -13,10 +13,10 @@ public class Role {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="role_id")
-	private int id;
+	private int id = 1;
 	@Column(name="role")
 	private String role;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -29,6 +29,6 @@ public class Role {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
+
+
 }

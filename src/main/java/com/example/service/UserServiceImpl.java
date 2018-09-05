@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,16 +24,17 @@ public class UserServiceImpl implements UserService{
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Override
-	public User findUserByEmail(String email) {
-		return userRepository.findByEmail(email);
+	public User findUserByName(String name) {
+		return userRepository.findByName(name);
 	}
 
 	@Override
 	public void saveUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setId(UUID.randomUUID().toString());
         user.setActive(1);
-        Role userRole = roleRepository.findByRole("ADMIN");
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        //Role userRole = roleRepository.findByRole("USER");
+        //user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
 

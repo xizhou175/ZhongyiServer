@@ -5,16 +5,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Transient;
 
@@ -23,9 +20,9 @@ import org.springframework.data.annotation.Transient;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@NotBlank
 	@Column(name = "user_id")
-	private int id;
+	private String id;
 	
 	@Column(name = "name")
 	@NotEmpty(message = "*Please provide your name")
@@ -36,18 +33,15 @@ public class User {
 	@NotEmpty(message = "*Please provide your password")
 	@Transient
 	private String password;
-	
+
 	@Column(name = "email")
-	@Email(message = "*Please provide a valid Email")
-	@NotEmpty(message = "*Please provide an email")
-	private String email;
+	private String email = "no email";
 	
 	@Column(name = "gender")
 	@NotEmpty(message = "*Please provide your gender")
 	private String gender;
 	
 	@Column(name = "age")
-	@NotEmpty(message = "*Please provide your age")
 	private Integer age;
 	
 	@Column(name = "active")
@@ -56,11 +50,11 @@ public class User {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -125,7 +119,7 @@ public class User {
 	}
 	
 	public String toString() {
-		return "name:" + getName() + "email:" + getEmail() + "password:" + getPassword() + "gender:" + getGender() + "age:" + getAge();
+		return "name:" + getName() + "password:" + getPassword() + "gender:" + getGender() + "age:" + getAge();
 	}
 
 }
