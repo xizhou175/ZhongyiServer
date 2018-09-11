@@ -2,9 +2,7 @@
 
 1. mvn clean
 2. mvn clean install
-3. Go to the target folder
-4. java -jar demo-0.0.1-SNAPSHOT.ja
+3. java -jar target/demo-0.0.1-SNAPSHOT.ja
 
-- http://localhost:8080/registration
-- http://localhost:8080/login
+Note: You need to change the DB config in application.properties (DB username, password, etc.) to make it run.
 
