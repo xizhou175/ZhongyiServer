@@ -42,6 +42,17 @@ public class LoginController {
 	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/user/{name}")
+	public ResponseEntity<String> getUser(@PathVariable String name) {
+		System.out.println("getUser");
+		User userExists = userService.findUserByName(name);
+		if (userExists != null) {
+			System.out.println("userExists");
+			return new ResponseEntity<>(userExists.getId(), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity createNewUser(@RequestBody String value) {
 	    System.out.println("user registration");
