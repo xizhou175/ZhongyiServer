@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,15 @@ import java.nio.file.StandardCopyOption;
 public class StorageService {
 
     private Path rootLocation = Paths.get("upload-data");
+    private Path patientDataLocation = rootLocation.resolve("patient-data");
+    private Path imageDataLocation = rootLocation.resolve("image-data");
+    private ObjectMapper mapper = new ObjectMapper();
 
     public StorageService() throws Exception{
         try {
             Files.createDirectories(rootLocation);
+            Files.createDirectories(patientDataLocation);
+            Files.createDirectories(imageDataLocation);
         }
         catch (IOException e) {
             throw new Exception("Could not initialize storage", e);
@@ -40,12 +46,16 @@ public class StorageService {
                                 + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, rootLocation.resolve(filename),
+                Files.copy(inputStream, imageDataLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }
         }
         catch (IOException e) {
             throw new Exception("Failed to store file " + filename, e);
         }
+    }
+
+    public void dumpJson(String fname, Object json) throws IOException {
+        mapper.writeValue(patientDataLocation.resolve(fname + ".json").toFile(), json);
     }
 }

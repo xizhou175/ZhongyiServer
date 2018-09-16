@@ -2,6 +2,7 @@ package com.example.controller;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class LoginController {
 	
@@ -35,9 +39,19 @@ public class LoginController {
         User userExists = userService.findUserByName(username);
         if (userExists != null) {
             if (bCryptPasswordEncoder.matches(password, userExists.getPassword())) {
-                return new ResponseEntity<>(userExists.getId(), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				Map<String, String> user = new HashMap<>();
+				user.put("id", userExists.getId());
+				user.put("name", userExists.getName());
+				user.put("gender", userExists.getGender());
+				ObjectMapper mapper = new ObjectMapper();
+				try {
+					String userStr = mapper.writeValueAsString(user);
+					return new ResponseEntity<>(userStr, HttpStatus.OK);
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
         }
 	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -77,6 +91,15 @@ public class LoginController {
 		
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
-	
+}
 
+class LoginUser {
+	private String gender;
+	private String name;
+	private String id;
+	LoginUser(String gender, String name, String id) {
+		this.gender = gender;
+		this.name = name;
+		this.id = id;
+	}
 }
