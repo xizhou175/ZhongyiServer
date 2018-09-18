@@ -82,6 +82,7 @@ public class LoginController {
 		}catch(Exception e){
 		    System.out.println(e.getMessage());
 		    e.printStackTrace();
+		    return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 		User userExists = userService.findUserByName(user.getName());
 		if (userExists == null) {
@@ -89,17 +90,6 @@ public class LoginController {
 			return new ResponseEntity(HttpStatus.OK);
 		}
 		
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
-	}
-}
-
-class LoginUser {
-	private String gender;
-	private String name;
-	private String id;
-	LoginUser(String gender, String name, String id) {
-		this.gender = gender;
-		this.name = name;
-		this.id = id;
+		return new ResponseEntity(HttpStatus.CONFLICT);
 	}
 }
