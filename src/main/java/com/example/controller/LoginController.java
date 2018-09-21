@@ -52,14 +52,26 @@ public class LoginController {
 	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/user/{name}")
-	public ResponseEntity<String> getUser(@PathVariable String name) {
+    @GetMapping("/userName/{name}")
+	public ResponseEntity<String> getUserByName(@PathVariable String name) {
 		name = name.trim();
 		System.out.println("getUser");
 		User userExists = userService.findUserByName(name);
 		if (userExists != null) {
 			System.out.println("userExists");
 			return new ResponseEntity<>(userExists.getId(), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping("/userId/{id}")
+	public ResponseEntity<String> getUserById(@PathVariable String id) {
+		id = id.trim();
+		System.out.println("getUser");
+		User userExists = userService.findUserById(id);
+		if (userExists != null) {
+			System.out.println("userExists");
+			return new ResponseEntity<>(userExists.getName(), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
