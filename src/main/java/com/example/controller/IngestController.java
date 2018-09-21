@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.service.StorageService;
 
 import java.io.IOException;
@@ -19,8 +19,16 @@ public class IngestController {
     @Autowired
     private StorageService storageService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/ingest")
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
+        String name = file.getName();
+        String userId = name.split("_")[0];
+        if (userService.findUserById(userId) == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         try {
             storageService.store(file);
         } catch (Exception e) {
@@ -34,7 +42,10 @@ public class IngestController {
 
     @PostMapping("/patientdata")
     public ResponseEntity handlePatientDataUpload(@RequestBody PatientData patient) {
-        System.out.println("heartRate: " + patient.getHeartRate() + " " + patient.getId());
+        System.out.println("handlePatientDataUpload: " + patient.getHeartRate() + " " + patient.getId());
+        if (userService.findUserById(patient.getId()) == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         try {
             storageService.dumpJson(patient.getId(), patient);
         } catch (IOException e) {

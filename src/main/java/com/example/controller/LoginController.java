@@ -1,17 +1,11 @@
 package com.example.controller;
 
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.User;
 import com.example.service.UserService;
@@ -85,6 +79,7 @@ public class LoginController {
 		}catch(Exception e){
 		    System.out.println(e.getMessage());
 		    e.printStackTrace();
+		    return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 		User userExists = userService.findUserByName(user.getName());
 		if (userExists == null) {
@@ -92,6 +87,6 @@ public class LoginController {
 			return new ResponseEntity(HttpStatus.OK);
 		}
 		
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity(HttpStatus.CONFLICT);
 	}
 }
