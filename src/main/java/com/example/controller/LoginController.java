@@ -35,6 +35,8 @@ public class LoginController {
 
 	@PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+		username = username.trim();
+		password = password.trim();
 	    System.out.println("user login: " + username + " "  + password);
         User userExists = userService.findUserByName(username);
         if (userExists != null) {
@@ -58,6 +60,7 @@ public class LoginController {
 
     @GetMapping("/user/{name}")
 	public ResponseEntity<String> getUser(@PathVariable String name) {
+		name = name.trim();
 		System.out.println("getUser");
 		User userExists = userService.findUserByName(name);
 		if (userExists != null) {
@@ -90,16 +93,5 @@ public class LoginController {
 		}
 		
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
-	}
-}
-
-class LoginUser {
-	private String gender;
-	private String name;
-	private String id;
-	LoginUser(String gender, String name, String id) {
-		this.gender = gender;
-		this.name = name;
-		this.id = id;
 	}
 }
