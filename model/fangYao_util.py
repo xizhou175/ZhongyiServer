@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import argparse
 
 def match_symptom( symptoms ):
 	if not symptoms:
@@ -19,7 +20,6 @@ def match_symptom( symptoms ):
 	for i in range( len(symptoms[u'脉象']) ):
 		truth = list(tmp_result[u'脉象'].apply( lambda x: symptoms[u'脉象'][i] in x))
 		tmp_result = tmp_result.loc[ truth ]
-	print(len(tmp_result))
 	if len(tmp_result) == 0:
 		return( {} )
 	elif len(tmp_result) == 1:
@@ -30,5 +30,11 @@ def match_symptom( symptoms ):
 		result = {u'症状':possible_symptoms, u'舌象':list(tmp_result[u'舌象']),u'脉象':list(tmp_result[u'脉象']) }
 	return(result)
 
-symptom = {u'症状':[u"两眼干涩,视物模糊", u"肢麻关节屈伸困难"], u'脉象':[], u'舌象':[]}
-print(match_symptom(symptom))
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--symptoms')
+	args = parser.parse_args()
+	symptoms = args.symptoms.split(' ')
+	symptom = {'症状': symptoms, '脉象': [], '舌象': []}
+	# symptom = {'症状':["两眼干涩,视物模糊", "肢麻关节屈伸困难"], '脉象':[], '舌象':[]}
+	print(match_symptom(symptom))

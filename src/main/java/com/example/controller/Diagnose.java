@@ -24,7 +24,7 @@ public class Diagnose {
         if (isWindows) {
             builder.command("cmd.exe", "/c", "dir");
         } else {
-            builder.command("python3", "fangYao_util.py");
+            builder.command("python3", "fangYao_util.py", "--symptoms", "两眼干涩,视物模糊 肢麻关节屈伸困难");
         }
         builder.directory(new File("./model"));
         try {
