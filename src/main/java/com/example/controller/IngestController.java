@@ -23,7 +23,8 @@ public class IngestController {
 
     @PostMapping("/ingest")
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
-        String name = file.getName();
+        String name = file.getOriginalFilename();
+        System.out.println("ingestFileName: " + name);
         String userId = name.split("_")[0];
         if (userService.findUserById(userId) == null) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -42,7 +43,8 @@ public class IngestController {
     @PostMapping("/patientdata")
     public ResponseEntity handlePatientDataUpload(@RequestBody PatientData patient) {
         System.out.println("handlePatientDataUpload: " + patient.getHeartRate() + " " + patient.getId());
-        if (userService.findUserById(patient.getId()) == null) {
+        String userId = patient.getId().split("_")[0];
+        if (userService.findUserById(userId) == null) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         try {
