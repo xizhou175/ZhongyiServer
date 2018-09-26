@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -56,6 +57,16 @@ public class StorageService {
     }
 
     public void dumpJson(String fname, Object json) throws IOException {
+        if (!fname.endsWith(".json")) {
+            fname += ".json";
+        }
         mapper.writeValue(patientDataLocation.resolve(fname + ".json").toFile(), json);
+    }
+
+    public File getPatientDataFile(String basename) {
+        if (!basename.endsWith(".json")) {
+            basename += ".json";
+        }
+        return patientDataLocation.resolve(basename).toFile();
     }
 }

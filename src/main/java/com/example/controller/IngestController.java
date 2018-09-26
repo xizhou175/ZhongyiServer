@@ -48,7 +48,7 @@ public class IngestController {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         try {
-            storageService.dumpJson(patient.getId(), patient);
+            storageService.dumpJson(patient.getId() + ".json", patient);
         } catch (IOException e) {
             System.out.println("handlePatientDataUpload: " + e.getMessage());
             e.printStackTrace();
@@ -61,6 +61,7 @@ public class IngestController {
 class PatientData {
     private String id;
     private int heartRate;
+    private String[] symptoms;
 
     public void setId(String id) {
         this.id = id;
@@ -70,9 +71,16 @@ class PatientData {
     }
 
     public void setHeartRate(int rate) {
-        heartRate = rate;
+        this.heartRate = rate;
     }
     public int getHeartRate() {
         return heartRate;
+    }
+
+    public void setSymptoms(String[] symptoms) {
+        this.symptoms = symptoms;
+    }
+    public String[] getSymptoms() {
+        return symptoms;
     }
 }
