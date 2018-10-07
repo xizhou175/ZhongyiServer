@@ -84,7 +84,7 @@ public class LoginController {
 		    System.out.println(value);
 		    ObjectMapper mapper = new ObjectMapper();
 		    JsonNode jsonUserNode = mapper.readTree(value);
-		    user.setName(jsonUserNode.get("username").asText());
+		    user.setName(jsonUserNode.get("username").asText().trim());
 		    user.setPassword(jsonUserNode.get("password").asText());
 		    user.setAge(jsonUserNode.get("age").asInt());
 		    user.setGender(jsonUserNode.get("gender").asText());

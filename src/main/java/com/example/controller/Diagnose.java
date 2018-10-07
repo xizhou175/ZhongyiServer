@@ -22,8 +22,6 @@ public class Diagnose {
 
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     String data;
-    Consumer<String> consumer = s -> data = s;
-
 
     @GetMapping("/diag/{fid}")
     public ResponseEntity<List<String>> handleDiagnose(@PathVariable String fid) {
@@ -44,16 +42,39 @@ public class Diagnose {
 
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
-            builder.command("cmd.exe", "/c", "dir");
+            String pythonExe = "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe";
+            builder.command(pythonExe, "fangYao_util.py", "--symptoms", symptoms);
         } else {
             builder.command("python3", "fangYao_util.py", "--symptoms", symptoms);
         }
-        builder.directory(new File("./model"));
+        builder.directory(new File("C:\\Users\\Administrator\\IdeaProjects\\ZhongyiServer\\model"));
         try {
             Process process = builder.start();
-            StreamGobbler streamGobbler =
-                    new StreamGobbler(process.getInputStream(), consumer);
-            Executors.newSingleThreadExecutor().submit(streamGobbler);
+
+            //Read out dir output
+
+            {
+                InputStream is = process.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    data = line;
+                }
+            }
+
+            {
+                // Print error
+                InputStream is = process.getErrorStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                }
+            }
 
             process.waitFor();
 
@@ -64,6 +85,8 @@ public class Diagnose {
             System.out.println("diagnose InterruptedException");
             e.printStackTrace();
         }
+
+        System.out.println("data" + data);
 
         return new ResponseEntity(data, HttpStatus.OK);
     }

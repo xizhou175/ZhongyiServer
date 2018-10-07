@@ -60,7 +60,7 @@ public class StorageService {
         if (!fname.endsWith(".json")) {
             fname += ".json";
         }
-        mapper.writeValue(patientDataLocation.resolve(fname + ".json").toFile(), json);
+        mapper.writeValue(patientDataLocation.resolve(fname).toFile(), json);
     }
 
     public File getPatientDataFile(String basename) {

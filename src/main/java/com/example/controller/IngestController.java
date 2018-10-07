@@ -25,6 +25,7 @@ public class IngestController {
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
         String name = file.getOriginalFilename();
         System.out.println("ingestFileName: " + name);
+        System.out.println("file size: " + file.getSize());
         String userId = name.split("_")[0];
         if (userService.findUserById(userId) == null) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
